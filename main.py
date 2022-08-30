@@ -713,22 +713,6 @@ def find_and_print_most_similar_docs(query_doc, file_system, include_query, forb
                     document_similarity_list.remove(doc)
                     break  # document is removed - finish inner loop and go to next document
 
-    if measure == "all":
-        # sort the list by total similarity score
-        document_similarity_list.sort(key=lambda x: x.total_similarity_score, reverse=True)
-    elif measure == "bow":
-        # sort the list by bow similarity score
-        document_similarity_list.sort(key=lambda x: x.bow_similarity_score, reverse=True)
-    elif measure == "jaccard":
-        # sort the list by jaccard similarity score
-        document_similarity_list.sort(key=lambda x: x.jaccard_similarity_score, reverse=True)
-    elif measure == "bm25":
-        # sort the list by bm25 similarity score
-        document_similarity_list.sort(key=lambda x: x.tfidf_similarity_score, reverse=True)
-    elif measure == "doc2vec":
-        # sort the list by doc2vec similarity score
-        document_similarity_list.sort(key=lambda x: x.doc2vec_similarity_score, reverse=True)
-
     doc_len = min(DOC_NUMBER_FOR_RANKING, len(document_similarity_list))
     print("\nTotal amount of documents in the system: " + str(len(document_similarity_list)))
     print("Top", doc_len, "documents with the highest total similarity score, ", end='')
@@ -739,11 +723,37 @@ def find_and_print_most_similar_docs(query_doc, file_system, include_query, forb
         print("excluding the query words:")
         print("(Substitutional query is: " + ' '.join(query_doc.lemmatized_text) + ")")
     print()
-    for i in range(doc_len):
-        sim = document_similarity_list[i].total_similarity_score
-        # round sim to 5 decimal places
-        sim = round(sim, 5)
-        print(str(i + 1) + ")\t\tFile", document_similarity_list[i].doc.name, "\t similarity:", sim)
+
+    if measure == "all":
+        # sort the list by total similarity score
+        document_similarity_list.sort(key=lambda x: x.total_similarity_score, reverse=True)
+        for i in range(doc_len):
+            sim = document_similarity_list[i].total_similarity_score
+            print(str(i + 1) + ")\t\tFile", document_similarity_list[i].doc.name, "\t similarity:", round(sim, 5))
+    elif measure == "bow":
+        # sort the list by bow similarity score
+        document_similarity_list.sort(key=lambda x: x.bow_similarity_score, reverse=True)
+        for i in range(doc_len):
+            sim = document_similarity_list[i].bow_similarity_score
+            print(str(i + 1) + ")\t\tFile", document_similarity_list[i].doc.name, "\t similarity:", round(sim, 5))
+    elif measure == "jaccard":
+        # sort the list by jaccard similarity score
+        document_similarity_list.sort(key=lambda x: x.jaccard_similarity_score, reverse=True)
+        for i in range(doc_len):
+            sim = document_similarity_list[i].jaccard_similarity_score
+            print(str(i + 1) + ")\t\tFile", document_similarity_list[i].doc.name, "\t similarity:", round(sim, 5))
+    elif measure == "bm25":
+        # sort the list by bm25 similarity score
+        document_similarity_list.sort(key=lambda x: x.tfidf_similarity_score, reverse=True)
+        for i in range(doc_len):
+            sim = document_similarity_list[i].tfidf_similarity_score
+            print(str(i + 1) + ")\t\tFile", document_similarity_list[i].doc.name, "\t similarity:", round(sim, 5))
+    elif measure == "doc2vec":
+        # sort the list by doc2vec similarity score
+        document_similarity_list.sort(key=lambda x: x.doc2vec_similarity_score, reverse=True)
+        for i in range(doc_len):
+            sim = document_similarity_list[i].doc2vec_similarity_score
+            print(str(i + 1) + ")\t\tFile", document_similarity_list[i].doc.name, "\t similarity:", round(sim, 5))
 
 
 def run_query():
